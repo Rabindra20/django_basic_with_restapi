@@ -1,0 +1,39 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: deploy-app-django
+  namespace: test
+  labels:
+    app: django-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django-app
+  template:
+    metadata:  
+      name: django-app
+      labels:
+        app: django-app
+    spec:
+      # volumes:
+      #   - name: configs
+      #     configMap:
+      #       name: configmap
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: django
+        image: django:v1
+          # volumeMounts:
+          # - name: configs
+          #   mountPath: /var/tmp/env.json
+          #   subPath: env
+          #   readOnly: true
+          envFrom:
+            - configMapRef:
+                name: configmap
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+     

@@ -1,0 +1,54 @@
+version: "3.4"
+
+services:
+  pg:
+    container_name: pg_sql
+    image: postgres:12
+    restart: always
+    volumes:
+      - pg_db_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-POSTGRES_DB=postgres}
+    # env_file:
+    #   - ./.env
+
+  django_pgadmin:
+    container_name: django_pgadmin_con
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - django_pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    restart: unless-stopped
+
+
+  app:
+    container_name: django
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always
+    # env_file:
+    #   - ./.env
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./:/source/
+
+volumes:
+  pg_db_data:
+  django_pgadmin:

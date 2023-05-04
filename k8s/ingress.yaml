@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: django-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "django-test.rrsah.com.np"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: django-app-service
+            port:
+              number: 80
+
+  # tls:
+  # - hosts:
+  #   - django-test.rrsah.com.np
+  #   secretName: example-app-tls
+              
