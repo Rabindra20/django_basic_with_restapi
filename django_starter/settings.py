@@ -29,13 +29,14 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://127.0.0.1:8000','localhost','127.0.0.1','4edc-103-232-154-115.ngrok-free.app']
+ALLOWED_HOSTS = ['http://127.0.0.1:8000','localhost','127.0.0.1','7866-163-47-148-181.ngrok-free.app']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'home.apps.HomeConfig',
+    # 'ts.apps.TsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

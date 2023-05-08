@@ -31,11 +31,10 @@ from rest_framework.routers import DefaultRouter
 #setup route 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path("polls/", include('polls.urls'))
     path("", include('home.urls')),
-    path("polls/", include('polls.urls')),
     # path("about/", include('about.urls')) #about page is inside home
     path("api/", include('api.urls')),
+    # path("ts/", include('ts.urls')),
 ]
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
