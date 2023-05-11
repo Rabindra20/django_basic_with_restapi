@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://127.0.0.1:8000','localhost','127.0.0.1','7866-163-47-148-181.ngrok-free.app','qyrxaezut6av76uongbyleydou0wmmfo.lambda-url.us-east-1.on.aws']
+ALLOWED_HOSTS = ['http://127.0.0.1:8000','localhost','127.0.0.1','7866-163-47-148-181.ngrok-free.app','0.0.0.0']
 
 
 # Application definition
