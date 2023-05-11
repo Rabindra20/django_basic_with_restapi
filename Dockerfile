@@ -17,6 +17,6 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . .
 RUN echo "SECRET_KEY=${SECRET_KEY}" > /usr/src/app/django_starter/.env
-CMD ["python" , "manage.py" ,"runserver", "0.0.0.0:8000"]
+CMD ["python" , "manage.py" ,"runserver", "0.0.0.0:80"]
 # FROM nginx:1.21-alpine
 # COPY nginx.conf /etc/nginx/conf.d
