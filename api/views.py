@@ -11,6 +11,7 @@ from rest_framework.generics import RetrieveAPIView,ListCreateAPIView
 from rest_framework import status,generics,viewsets
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 
 class MyObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
@@ -27,6 +28,17 @@ class UserProfileView(APIView):
     serializer = UserProfileSerializer(request.user)
     queryset=User.objects.all()
     return Response(serializer.data, status=status.HTTP_200_OK)
+  
+# def student(request):
+#     stu =Student.object.get(get=1)
+# #     stu =Student.object.all()
+#     serializer = StudentSerializer(stu)
+# #    serializer = StudentSerializer(stu,many=true)
+#     json = JSONRenderer().render(serializer.data)
+#     return HttpResponse(json_data,content_type='application/json')
+
+
+
 
 # class UserProfileView(generics.ListCreateAPIView):
 #     serializer_class = UserProfileSerializer

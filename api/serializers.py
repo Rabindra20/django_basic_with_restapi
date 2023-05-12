@@ -65,3 +65,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = ['id', 'email', 'username']
+
+# class StudentSerializer(serializers.Serializer):
+#     email = serializers.CharField(max_length=454)
