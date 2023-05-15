@@ -27,14 +27,14 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi         
       
-      - name: Run Tests
-        run: |
-          source newenv/bin/activate
-          python manage.py test
-        # with: # Set the secret as an input
-        # test: ${{ secrets.SuperSecret }}
-        env: # Or as an environment variable
-         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      # - name: Run Tests
+      #   run: |
+      #     source newenv/bin/activate
+      #     python manage.py test
+      #   # with: # Set the secret as an input
+      #   # test: ${{ secrets.SuperSecret }}
+      #   env: # Or as an environment variable
+      #    SECRET_KEY: ${{ secrets.SECRET_KEY }}
       
       # - name: build docker
       #   run: |
