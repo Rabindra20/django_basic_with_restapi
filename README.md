@@ -112,5 +112,7 @@ pip freeze
 ```
 pip install django-environ
 ```
+for postgres
 ```
+pip install psycopg2
 ```
