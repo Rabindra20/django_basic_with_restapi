@@ -59,7 +59,7 @@ jobs:
         env:
          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
          ECR_REPOSITORY: rabindra-test
-         IMAGE_TAG: test
+         IMAGE_TAG: test1
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}"
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
