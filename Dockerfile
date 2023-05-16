@@ -21,6 +21,7 @@ RUN \
 # copy project
 COPY . .
 RUN echo "SECRET_KEY=${SECRET_KEY}" > /usr/src/app/django_starter/.env
+# ENTRYPOINT ["/usr/src/app/start.sh"]
 CMD ["python" , "manage.py" ,"runserver", "0.0.0.0:8000"]
 # FROM nginx:1.21-alpine
 # COPY nginx.conf /etc/nginx/conf.d
