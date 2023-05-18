@@ -1,0 +1,4 @@
+terraform_aws/*
+.github/*
+k8s/*
+.gitignore
