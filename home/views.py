@@ -8,9 +8,9 @@ from django.contrib.auth import authenticate, logout
 
 
 def index(request):
-    # if not request.user.is_authenticated:
-    #     return render(request, "login.html")
-    # else:
+    if not request.user.is_authenticated:
+        return render(request, "login.html")
+    else:
       context = {
       'variable':":this variablevaule"
       }
