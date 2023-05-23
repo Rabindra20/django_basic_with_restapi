@@ -27,14 +27,14 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi         
       
-      # - name: Run Tests
-      #   run: |
-      #     source newenv/bin/activate
-      #     python manage.py test
-      #   # with: # Set the secret as an input
-      #   # test: ${{ secrets.SuperSecret }}
-      #   env: # Or as an environment variable
-      #    SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      - name: Run Tests
+        run: |
+          source newenv/bin/activate
+          python manage.py test
+        # with: # Set the secret as an input
+        # test: ${{ secrets.SuperSecret }}
+        env: # Or as an environment variable
+         SECRET_KEY: ${{ secrets.SECRET_KEY }}
       
       # - name: build docker
       #   run: |
@@ -45,23 +45,36 @@ jobs:
           # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           # aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.ROLE }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR
+          #Openid to deploy image in ecr
+      # - name: Configure AWS credentials from Test account
+      #   uses: aws-actions/configure-aws-credentials@v2
+      #   with:
+      #     role-to-assume: ${{ secrets.ROLE }}
+      #     aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Login to Docker Hub
+        id: docker-login
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build, tag, and push image to Amazon ECR or docker hub
+        id: build-image
         env:
          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
          ECR_REPOSITORY: rabindra-test
-         IMAGE_TAG: test
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}"
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+         IMAGE_TAG: be-${{ github.sha }}
+        # run: |
+        #   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}"
+        #   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+         run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/$REPOSITORY:$IMAGE_TAG .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$REPOSITORY:$IMAGE_TAG
 
   
