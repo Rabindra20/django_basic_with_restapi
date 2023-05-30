@@ -41,7 +41,9 @@ resource "aws_eks_cluster" "eks" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
   version  = var.eks_version
-  tags     = var.tags
+  tags     = merge({
+    "alpha.eksctl.io/cluster-oidc-enabled"  = "true"
+  },var.tags)
   vpc_config {
     subnet_ids              = var.cluster_subnet_ids
     endpoint_private_access = var.cluster_endpoint_private_access
