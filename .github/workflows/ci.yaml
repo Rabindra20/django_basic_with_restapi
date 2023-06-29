@@ -77,5 +77,10 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/$REPOSITORY:$IMAGE_TAG . --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}"
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$REPOSITORY:$IMAGE_TAG
-
+#       - name: Deploy in ECS
+#         env:
+#           SERVICE: ${{ secrets.ECS_SERVICE }}
+#           CLUSTER: ${{ secrets.ECS_CLUSTER }}
+#         run: | 
+#           aws ecs update-service --force-new-deployment --service $SERVICE --cluster $CLUSTER
   
