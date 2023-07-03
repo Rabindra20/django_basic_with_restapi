@@ -58,3 +58,118 @@ module "eks_nodegroup" {
     env="test"
   }
 }
+#################################################
+# Task definition & Service for demo
+#################################################
+module "test_dev" {
+  source                  = "./module/ecs"
+  app_name                = "demo"
+  cluster                 = aws_ecs_cluster.test.id
+  task_definition         = "demo-task"
+  launch_type             = "FARGATE"
+  scheduling_strategy     = "REPLICA"
+  desired_count           = 1
+  force_new_deployment    = true
+  subnets                 = []
+  assign_public_ip        = false
+  security_groups         = []
+  target_group            = aws_alb_target_group.test.arn
+  container_port          = 8000
+  tags                    = "demo"
+  task_definition_name    = "demo"
+  stage                   = "demo"
+  ecr_repo                = aws_ecr_repository.test.repository_url
+  ecr_image_tag           = "be-test"
+  aws_region              = "us-west-2"
+  hostPort                = 8000
+  protocol                = "tcp"
+  memory                  = "512"
+  cpu                     = "256"
+  networkMode             = "awsvpc"
+  requires_compatibilities= ["FARGATE"]
+  task_role_arn           = aws_iam_role.task_definition.arn
+  execution_role_arn      = aws_iam_role.task_definition.arn
+  depends_on              = [aws_iam_role.task_definition]
+}
+##########################################################################################
+# TargetGroup and Listener Rule for test
+##########################################################################################
+resource "aws_alb_target_group" "test" {
+  vpc_id      = data.aws_vpc.dev.id
+  name        = "test"
+  target_type = "ip"
+  protocol    = "HTTP"
+  port        = 8000
+  health_check {
+    healthy_threshold   = "5"
+    interval            = "30"
+    protocol            = "HTTP"
+    matcher             = "200-499"
+    timeout             = "5"
+    path                = "/"
+    unhealthy_threshold = "2"
+  }
+}
+
+resource "aws_alb_listener_rule" "test_dev" {
+  listener_arn = ""
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.test.arn
+  }
+  # condition {
+  #   host_header {
+  #     values = [local.backend_domains_dev.test_domain]
+  #   }
+  # }
+}
+#########################################
+# task definition role
+#########################################
+resource "aws_iam_role" "task_definition" {
+  name               = "ECS-Task-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+
+  # tags = merge({
+  #   Name = "task-definition"
+  # }, module.label.tags)
+}
+
+
+resource "aws_iam_role_policy_attachment" "AmazonECSTaskExecutionRolePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.task_definition.name
+  depends_on = [aws_iam_role.task_definition]
+}
+
+###################################################
+# Route53
+###################################################
+locals {
+  demo = {
+    test=""
+  }
+}
+
+resource "aws_route53_record" "backend" {
+  for_each = local.demo
+  name     = each.value
+  type     = "CNAME"
+  records  = [module.dev-lb.alb_dns_name]
+  zone_id  = ""
+  ttl      = 60
+}
