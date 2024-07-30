@@ -10,6 +10,7 @@ urlpatterns = [
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name='auth_register'),
     path('profile/', UserProfileView.as_view(), name='APIView'),
+    path('viewuser/', UserProfileViewAll.as_view(), name='APIViewAll'),
     path('logout/', LogoutView.as_view(), name='auth_logout'),
     re_path(r'^$', RedirectView.as_view(url=reverse_lazy('api-root'), permanent=False)),
 ] 
