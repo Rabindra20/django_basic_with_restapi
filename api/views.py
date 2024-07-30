@@ -27,9 +27,15 @@ class UserProfileView(APIView):
   permission_classes = [IsAuthenticated]
   def get(self, request, format=None):
     serializer = UserProfileSerializer(request.user)
-    queryset=User.objects.all()
+    # queryset=User.objects.all()
     return Response(serializer.data, status=status.HTTP_200_OK)
-  
+
+class UserProfileViewAll(APIView):
+  permission_classes = [IsAuthenticated]
+  def get(self, request, format=None):
+    queryset=User.objects.all()
+    serializer = UserProfileSerializer(queryset,many=true)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 # def student(request):
 #     stu =Student.object.get(get=1)
 # #     stu =Student.object.all()
