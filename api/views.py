@@ -30,7 +30,7 @@ class UserProfileView(APIView):
     # queryset=User.objects.all()
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-class UserProfileViewAll(APIView):
+class UserProfileViewAll(APIViewAll):
   permission_classes = [IsAuthenticated]
   def get(self, request, format=None):
     queryset=User.objects.all()
